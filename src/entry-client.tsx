@@ -3,6 +3,7 @@ import site from "virtual:site";
 import { App } from "./App";
 import type { PageProps } from "./core/routes";
 import "./styles/app.css";
+import "virtual:site-styles";
 
 const root = document.getElementById("root")!;
 const dataEl = document.getElementById("__page");

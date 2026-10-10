@@ -6,14 +6,16 @@
  *   node scripts/build.mjs --site lantern
  *   node scripts/build.mjs --all
  *   node scripts/build.mjs --site x --production   # launch build: fails unless launch gate passes
+ *   node scripts/build.mjs --site x --deploy-dir dist/deploy
+ *       # also copy the finished site to a fixed folder a host can serve (e.g. Vercel's outputDirectory)
  *
  * Writes only inside this project (dist/). Makes no network requests unless a
  * site config explicitly uses the "http" catalog provider.
  */
 import { build } from "vite";
 import { createHash } from "node:crypto";
-import { mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
-import { dirname, join, resolve } from "node:path";
+import { cp, mkdir, readFile, readdir, rm, writeFile } from "node:fs/promises";
+import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -26,6 +28,22 @@ const allSites = (await readdir(join(root, "sites"), { withFileTypes: true }))
   .map((d) => d.name)
   .sort();
 const sites = args.includes("--all") ? allSites : [siteArg ?? process.env.SITE ?? "harborline"];
+
+// Optional fixed output folder for hosts that serve one directory. Single site
+// only, and only inside dist/, so a typo can never delete anything else.
+const deployArg = args.includes("--deploy-dir") ? args[args.indexOf("--deploy-dir") + 1] : undefined;
+const deployDir = deployArg ? resolve(root, deployArg) : undefined;
+if (deployDir) {
+  const rel = relative(join(root, "dist"), deployDir);
+  if (!rel || rel.startsWith("..") || resolve(join(root, "dist"), rel) !== deployDir) {
+    console.error(`✗ --deploy-dir must be a folder inside dist/ (got ${deployArg})`);
+    process.exit(1);
+  }
+  if (sites.length !== 1 || sites.includes(rel.split(/[\\/]/)[0])) {
+    console.error("✗ --deploy-dir needs exactly one site and must not be that site's own dist folder");
+    process.exit(1);
+  }
+}
 
 const escAttr = (s) => s.replace(/&/g, "&amp;").replace(/"/g, "&quot;");
 const jsonForScript = (v) => JSON.stringify(v).replace(/</g, "\\u003c");
@@ -152,4 +170,10 @@ for (const s of sites) {
   }
 }
 await rm(join(root, "dist", ".ssr"), { recursive: true, force: true });
+if (deployDir && !failed) {
+  // Copied only after a fully successful build, so a failed build never replaces what is there.
+  await rm(deployDir, { recursive: true, force: true });
+  await cp(join(root, "dist", sites[0]), deployDir, { recursive: true });
+  console.log(`✓ ${sites[0]} copied to ${relative(root, deployDir)}`);
+}
 process.exit(failed ? 1 : 0);

@@ -40,6 +40,8 @@ npm run preview -- --site lantern      # http://127.0.0.1:4173
 
 No credentials, environment variables or external services are needed to build or preview.
 
+**Vercel:** import the repo as-is. The root `vercel.json` builds the site named by the `SITE` environment variable (default `harborline`) and serves it. Set `SITE=lantern` or `SITE=tallyhook` to show another example. Details: TEMPLATE_IMPLEMENTATION.md → *Deploying to Vercel*.
+
 ## Documentation
 
 | Document | Contents |
@@ -52,7 +54,7 @@ No credentials, environment variables or external services are needed to build o
 
 ## Limitations
 
-- Not deployed anywhere. The generated `vercel.json` security headers have not been served by a real host.
+- Demo deployments are `noindex` by design. Production use requires the launch gate (`--production`) and confirmed facts.
 - The live, indexable production path is covered by unit tests on a test-only config, not by a real launched site.
 - Automated accessibility checks pass, but this is **not** an accessibility certification. Manual screen-reader testing is still needed.
 - Out of scope: checkout and payments, CMS adapters, self-hosted fonts and an image pipeline. See ARCHITECTURE.md.

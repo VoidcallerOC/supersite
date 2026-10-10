@@ -8,7 +8,7 @@ These checks were run on the exact files in this repository's first commit, on 2
 | `npm run typecheck` (`tsc --noEmit`, strict) | ✅ 0 errors |
 | `npm run lint` (ESLint 9: typescript-eslint, react-hooks, jsx-a11y strict) | ✅ 0 problems |
 | `npm run format:check` (Prettier, code files) | ✅ |
-| `npm run test` (Vitest; jsdom for components) | ✅ 86 / 86 in 10 files |
+| `npm run test` (Vitest; jsdom for components) | ✅ 87 / 87 in 10 files |
 | `npm run build:all` | ✅ harborline 6 pages · lantern 26 pages · tallyhook 6 pages |
 | `npm run test:output` (inspects `dist/`) | ✅ 37 / 37 |
 | `npx playwright test` (1280px desktop + 375px mobile, axe-core) | ✅ 51 passed, 1 skipped (the mobile-menu test is skipped on desktop by design) |
@@ -28,7 +28,7 @@ These checks were run on the exact files in this repository's first commit, on 2
   - integer-cent money
   - catalog providers (ok / empty / unavailable / timeout)
   - form submission outcomes and the reference handler with its rate limiter
-- **Component (14):**
+- **Component (15):**
   - mobile menu ARIA and Escape behaviour
   - form error summary and focus, demo / failure / success outcomes
   - catalog filters, URL state and the empty / unavailable states

@@ -1,6 +1,7 @@
 import type { SectionProps } from "./types";
 import { CtaRow } from "../components/ui";
 import { HeroArt } from "../components/Art";
+import { Icon } from "../components/Icon";
 
 export function Hero({ section: s, isFirst }: SectionProps<"hero">) {
   const H = isFirst ? "h1" : "h2";
@@ -50,6 +51,70 @@ export function Hero({ section: s, isFirst }: SectionProps<"hero">) {
               </ul>
             ) : null}
           </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (s.panel) {
+    const p = s.panel;
+    return (
+      <section id={s.id} aria-labelledby={`${s.id}-heading`} className={`tone-${s.tone} section-y`}>
+        <div className="container-site grid items-center gap-12 lg:grid-cols-[1.15fr_1fr] lg:gap-16">
+          <div>
+            {head}
+            <CtaRow ctas={s.ctas} className="mt-8" />
+            {s.highlights.length ? (
+              <ul className="mt-10 grid gap-x-6 gap-y-3 border-t border-border pt-6 sm:grid-cols-2">
+                {s.highlights.map((h) => (
+                  <li key={h} className="flex items-start gap-2.5 text-[0.9375rem] font-medium">
+                    <Icon name="check" className="mt-0.5 size-5 shrink-0 text-accent" />
+                    {h}
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </div>
+          <figure className="relative">
+            <div aria-hidden="true" className="absolute -inset-3 -z-0 hidden rotate-2 rounded-lg bg-surface-alt sm:block" />
+            <div className="card relative overflow-hidden">
+              <div className="flex items-start justify-between gap-4 border-b border-border bg-accent px-6 py-5 text-accent-ink">
+                <div>
+                  <p className="eyebrow opacity-80">{p.eyebrow}</p>
+                  <p className="mt-1 font-heading text-xl font-semibold">{p.title}</p>
+                </div>
+                <Icon name="clipboard" className="size-7 shrink-0 opacity-80" />
+              </div>
+              {p.meta.length ? (
+                <dl className="grid grid-cols-2 gap-4 border-b border-border px-6 py-4 text-sm">
+                  {p.meta.map((m) => (
+                    <div key={m.label}>
+                      <dt className="text-muted">{m.label}</dt>
+                      <dd className="font-semibold">{m.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              ) : null}
+              <ul className="divide-y divide-border px-6">
+                {p.rows.map((r) => (
+                  <li key={r.label} className="flex items-baseline justify-between gap-4 py-3.5">
+                    <span>
+                      <span className="font-medium">{r.label}</span>
+                      {r.detail ? <span className="block text-sm text-muted">{r.detail}</span> : null}
+                    </span>
+                    <span className="font-label font-semibold tabular-nums">{r.value}</span>
+                  </li>
+                ))}
+              </ul>
+              {p.total ? (
+                <div className="flex items-baseline justify-between gap-4 border-t-2 border-ink px-6 py-4">
+                  <span className="font-semibold">{p.total.label}</span>
+                  <span className="font-heading text-2xl font-semibold tabular-nums">{p.total.value}</span>
+                </div>
+              ) : null}
+              {p.footnote ? <figcaption className="bg-surface-alt px-6 py-3 text-sm text-muted">{p.footnote}</figcaption> : null}
+            </div>
+          </figure>
         </div>
       </section>
     );

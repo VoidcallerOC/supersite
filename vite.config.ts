@@ -14,13 +14,17 @@ function siteConfigPlugin(siteId: string): Plugin {
   if (!existsSync(file)) throw new Error(`No site config at sites/${siteId}/site.config.ts`);
   // Production client builds get the config pre-validated as JSON by scripts/build.mjs.
   const json = process.env.SITE_CONFIG_JSON;
+  const siteCss = resolve(import.meta.dirname, "sites", siteId, "site.css");
   return {
     name: "forge-site-config",
     resolveId(id) {
+      // Optional per-site stylesheet (self-hosted fonts, brand-only tweaks); empty if absent.
+      if (id === "virtual:site-styles") return existsSync(siteCss) ? siteCss : "\0virtual:site-styles";
       if (id !== "virtual:site") return null;
       return json ? "\0virtual:site" : file;
     },
     load(id) {
+      if (id === "\0virtual:site-styles") return "";
       if (id === "\0virtual:site" && json) return `export default JSON.parse(${JSON.stringify(readFileSync(json, "utf8"))});`;
       return null;
     },

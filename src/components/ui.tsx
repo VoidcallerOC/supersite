@@ -31,12 +31,16 @@ export function CtaRow({ ctas, className = "" }: { ctas: Cta[]; className?: stri
   );
 }
 
-/** Visible label on any value that is not a confirmed fact. */
+/**
+ * Visible label on a value the business has not confirmed. Demo-only values
+ * are not tagged one by one: every demo page already carries the site-wide
+ * demo banner, and demo values are never turned into links.
+ */
 export function FactTag({ tag }: { tag: "confirm" | "demo" | null }) {
-  if (!tag) return null;
+  if (tag !== "confirm") return null;
   return (
-    <span className="tag ml-2 align-middle" title={tag === "demo" ? "Fictional demo content" : "Not yet confirmed by the business"}>
-      {tag === "demo" ? "Demo" : "To confirm"}
+    <span className="tag ml-2 align-middle" title="Not yet confirmed by the business">
+      To confirm
     </span>
   );
 }

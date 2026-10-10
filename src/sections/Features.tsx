@@ -1,5 +1,6 @@
 import type { SectionProps } from "./types";
 import { SectionShell } from "../components/ui";
+import { Icon, hasIcon } from "../components/Icon";
 
 const COLS = { 2: "md:grid-cols-2", 3: "md:grid-cols-2 lg:grid-cols-3", 4: "sm:grid-cols-2 lg:grid-cols-4" } as const;
 
@@ -9,7 +10,11 @@ export function Features({ section: s }: SectionProps<"features">) {
       <ul className={`grid gap-5 ${COLS[s.columns]}`}>
         {s.items.map((item) => (
           <li key={item.title} className="card relative flex flex-col p-6 text-ink">
-            {item.icon ? (
+            {hasIcon(item.icon) ? (
+              <span aria-hidden="true" className="mb-5 grid size-12 place-items-center rounded-md bg-accent text-accent-ink">
+                <Icon name={item.icon} />
+              </span>
+            ) : item.icon ? (
               <span aria-hidden="true" className="mb-4 grid size-11 place-items-center rounded-md bg-surface-alt text-xl">
                 {item.icon}
               </span>

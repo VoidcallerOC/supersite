@@ -135,6 +135,27 @@ const heroSection = z.object({
   /** Short factual bullets shown beside the heading (split variant). */
   highlights: z.array(z.string()).max(4).default([]),
   art: z.enum(["none", "grid", "rings", "product-mock"]).default("none"),
+  /**
+   * Optional document-style card beside the heading (split variant): a sample
+   * quote, menu, schedule or spec sheet. Shown instead of the highlights card;
+   * highlights then render as a compact list under the calls to action.
+   */
+  panel: z
+    .object({
+      eyebrow: z.string(),
+      title: z.string(),
+      meta: z
+        .array(z.object({ label: z.string(), value: z.string() }))
+        .max(4)
+        .default([]),
+      rows: z
+        .array(z.object({ label: z.string(), detail: z.string().optional(), value: z.string() }))
+        .min(1)
+        .max(6),
+      total: z.object({ label: z.string(), value: z.string() }).optional(),
+      footnote: z.string().optional(),
+    })
+    .optional(),
 });
 
 const featureGridSection = z.object({

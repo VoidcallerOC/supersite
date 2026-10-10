@@ -34,10 +34,17 @@ describe("Header / mobile navigation", () => {
     expect(main.querySelector('[aria-current="page"]')?.textContent).toBe("Events");
   });
 
-  it("shows the demo phone as text with a Demo tag, never as a tel: link", () => {
+  it("shows the demo phone as plain text, never as a tel: link or a per-item pill", () => {
     renderWithSite(harborline, <Header currentPath="/" />);
     expect(screen.getByText(/Call \(555\) 010-0142/)).toBeTruthy();
     expect(document.querySelector('a[href^="tel:"]')).toBeNull();
-    expect(screen.getAllByText("Demo").length).toBeGreaterThan(0);
+    expect(screen.queryByText("Demo")).toBeNull();
+  });
+
+  it("still tags unconfirmed facts with To confirm", () => {
+    const site = { ...harborline, business: { ...harborline.business, phone: { ...harborline.business.phone!, status: "unconfirmed" as const } } };
+    renderWithSite(site, <Header currentPath="/" />);
+    expect(screen.getByText("To confirm")).toBeTruthy();
+    expect(document.querySelector('a[href="tel:+15550100142"]')).not.toBeNull();
   });
 });

@@ -3,3 +3,5 @@ declare module "virtual:site" {
   const site: SiteConfig;
   export default site;
 }
+
+declare module "virtual:site-styles";

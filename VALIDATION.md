@@ -10,7 +10,7 @@ These checks were run on the exact files in this repository's first commit, on 2
 | `npm run format:check` (Prettier, code files) | ✅ |
 | `npm run test` (Vitest; jsdom for components) | ✅ 86 / 86 in 10 files |
 | `npm run build:all` | ✅ harborline 6 pages · lantern 26 pages · tallyhook 6 pages |
-| `npm run test:output` (inspects `dist/`) | ✅ 33 / 33 |
+| `npm run test:output` (inspects `dist/`) | ✅ 37 / 37 |
 | `npx playwright test` (1280px desktop + 375px mobile, axe-core) | ✅ 51 passed, 1 skipped (the mobile-menu test is skipped on desktop by design) |
 
 `npm run check` runs the typecheck, lint, format, unit and output steps in sequence; it exited 0.

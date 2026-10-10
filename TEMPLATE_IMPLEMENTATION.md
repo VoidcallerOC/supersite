@@ -100,5 +100,20 @@ Set `catalog.provider` to `{ provider: "http", url: "https://…/items.json", ti
 | `npm run dev` | Vite dev server (client-rendered; `SITE=<id>` selects the site) |
 | `npm run build -- --site <id>` / `npm run build:all` | Prerendered build(s) into `dist/<id>` + `dist/_reports/<id>.json` |
 | `npm run preview -- --site <id>` | Serve `dist/<id>` on 127.0.0.1:4173 |
+| `npm run build:vercel` | Build one site (`SITE` env, default `harborline`) and copy it to `dist/deploy` for hosting |
 | `npm run check` | typecheck → lint → format check → unit/component tests → build all → output tests |
 | `npm run test:e2e` | Playwright + axe against the built sites (after `build:all`) |
+
+## Deploying to Vercel
+
+The repository's root `vercel.json` builds **one site per Vercel project**:
+
+- `buildCommand`: `npm run build:vercel`, which builds `$SITE` (default `harborline`) and copies it to `dist/deploy`.
+- `outputDirectory`: `dist/deploy`.
+- `headers`: CSP, HSTS, nosniff and similar, plus `X-Robots-Tag: noindex` because the examples are demos.
+
+To show a different example, set the project's `SITE` environment variable to `lantern` or `tallyhook` and redeploy. To show all three, create one Vercel project per site, each with its own `SITE` value.
+
+**Before launching a real client site:**
+1. Build with `--production`, so the launch gate must pass.
+2. Replace the root `vercel.json` headers with the generated `dist/<site>/vercel.json`. That file drops `X-Robots-Tag` once the site is indexable.

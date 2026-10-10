@@ -130,4 +130,18 @@ describe("cross-site", () => {
     // The refused build must not touch the existing output.
     expect(read(join(root, "dist", "tallyhook", "index.html"))).toBe(before);
   });
+
+  it.each([
+    [["--site", "lantern", "--deploy-dir", "../outside"], /must be a folder inside dist\//],
+    [["--site", "lantern", "--deploy-dir", "dist"], /must be a folder inside dist\//],
+    [["--site", "lantern", "--deploy-dir", "dist/lantern"], /exactly one site/],
+    [["--all", "--deploy-dir", "dist/deploy"], /exactly one site/],
+  ])("--deploy-dir refuses unsafe targets before building: %j", (args, message) => {
+    const before = read(join(root, "dist", "lantern", "index.html"));
+    const r = spawnSync(process.execPath, ["scripts/build.mjs", ...args], { cwd: root, encoding: "utf8" });
+    expect(r.status).toBe(1);
+    expect(r.stderr).toMatch(message);
+    expect(read(join(root, "dist", "lantern", "index.html"))).toBe(before);
+    expect(existsSync(resolve(root, "../outside"))).toBe(false);
+  });
 });
